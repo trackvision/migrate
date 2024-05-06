@@ -6,9 +6,6 @@ on:
       - master
   pull_request:
 
-env:
-  IMAGE_NAME: tv-migrate
-
 jobs:
   lint:
     name: lint
@@ -56,7 +53,7 @@ jobs:
 
   tv-build-and-push:
     name: Build and push to trackvision
-    # needs: [lint, test]
+    needs: [lint, test]
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
@@ -70,10 +67,8 @@ jobs:
         id: meta
         uses: docker/metadata-action@v5
         with:
-          # ghcr.io/${{ github.repository }}
-          # ghcr.io/${{ github.repository.owner }}/${{ env.IMAGE_NAME }}
           images: |
-            ghcr.io/trackvision/${{ env.IMAGE_NAME }}
+            ghcr.io/${{ github.repository }}
           tags: |
             type=raw,value=latest,enable={{is_default_branch}}
             type=raw,value={{sha}}
